@@ -8,8 +8,10 @@ public class Lexer {
     private static final TokenType[] OPERATOR_TOKENS = {
             TokenType.PLUS,
             TokenType.MINUS,
-            TokenType.SLASH,
             TokenType.STAR,
+            TokenType.SLASH,
+            TokenType.LEFT_PAREN,
+            TokenType.RIGHT_PAREN,
     };
     private final String input;
     private final int length;
@@ -28,6 +30,9 @@ public class Lexer {
 
             if (Character.isDigit(current)) {
                 tokenizeNumber();
+            } else if (current == '#') {
+                next();
+                tokenizeHexNumber();
             } else if (OPERATOR_CHARS.indexOf(current) != -1) {
                 tokenizeOperator();
             } else {
@@ -50,6 +55,22 @@ public class Lexer {
         addToken(TokenType.NUMBER, buffer.toString());
     }
 
+    private void tokenizeHexNumber() {
+        final StringBuilder buffer = new StringBuilder();
+        char current = peek(0);
+
+        while (Character.isDigit(current) || isHexNumber(current)) {
+            buffer.append(current);
+            current = next();
+        }
+
+        addToken(TokenType.HEX_NUMBER, buffer.toString());
+    }
+
+    private static boolean isHexNumber(char current) {
+        return ("abcdef".indexOf(Character.toLowerCase(current))) != -1;
+    }
+
     private void tokenizeOperator() {
         final int pos = OPERATOR_CHARS.indexOf(peek(0));
 
@@ -58,7 +79,7 @@ public class Lexer {
     }
 
     private void addToken(TokenType type) {
-        addToken(type, null);
+        addToken(type, "");
     }
 
     private void addToken(TokenType type, String text) {
