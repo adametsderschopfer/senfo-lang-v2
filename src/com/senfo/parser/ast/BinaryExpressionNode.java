@@ -23,6 +23,6 @@ public final class BinaryExpressionNode implements IExpressionNode {
 
     @Override
     public String toString() {
-        return left + " " + operation + " " + right;
+        return String.format("[%s %c %s]", left, operation, right);
     }
 }
