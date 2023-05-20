@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        final String input = "(2 + 2) + #2d";
+        final String input = "(2.86 + 2) + #2d";
         final List<Token> tokens = new Lexer(input).tokenize();
 
         final List<IExpressionNode> expressions = new Parser(tokens).parse();
