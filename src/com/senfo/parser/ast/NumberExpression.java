@@ -1,19 +1,22 @@
 package com.senfo.parser.ast;
 
+import com.senfo.lib.IValue;
+import com.senfo.lib.NumberValue;
+
 public final class NumberExpression implements IExpression {
-    private final double value;
+    private final IValue value;
 
     public NumberExpression(double value) {
-        this.value = value;
+        this.value = new NumberValue(value);
     }
 
     @Override
-    public double eval() {
+    public IValue eval() {
         return value;
     }
 
     @Override
     public String toString() {
-        return String.valueOf(value);
+        return value.asString();
     }
 }

@@ -1,5 +1,8 @@
 package com.senfo.parser.ast;
 
+import com.senfo.lib.IValue;
+import com.senfo.lib.NumberValue;
+
 public final class UnaryExpression implements IExpression {
     private final IExpression expr;
     private final char operation;
@@ -10,9 +13,9 @@ public final class UnaryExpression implements IExpression {
     }
 
     @Override
-    public double eval() {
+    public IValue eval() {
         return switch (operation) {
-            case '-' -> -expr.eval();
+            case '-' -> new NumberValue(-expr.eval().asDouble());
             default -> expr.eval();
         };
     }

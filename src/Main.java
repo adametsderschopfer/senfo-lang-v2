@@ -6,11 +6,15 @@ import com.senfo.parser.ast.IExpression;
 import com.senfo.parser.ast.IStatement;
 import com.senfo.parser.ast.VariableExpression;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class Main {
-    public static void main(String[] args) {
-        final String input = "word = 2 + 2\nword2 = PI + word";
+    public static void main(String[] args) throws IOException {
+        final String input = new String(Files.readAllBytes(Paths.get("example/program.txt")), "UTF-8");
+
         final List<Token> tokens = new Lexer(input).tokenize();
         System.out.println(tokens);
 
@@ -22,8 +26,5 @@ public class Main {
         for (IStatement statement : expressions) {
             statement.execute();
         }
-
-        System.out.printf("%s = %f\n", "word", Variables.get("word"));
-        System.out.printf("%s = %f", "word2", Variables.get("word2"));
     }
 }

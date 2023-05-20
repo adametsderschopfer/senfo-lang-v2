@@ -1,5 +1,8 @@
 package com.senfo.parser.ast;
 
+import com.senfo.lib.IValue;
+import com.senfo.lib.NumberValue;
+
 public final class BinaryExpression implements IExpression {
     private final IExpression left, right;
     private final char operation;
@@ -11,13 +14,15 @@ public final class BinaryExpression implements IExpression {
     }
 
     @Override
-    public double eval() {
+    public IValue eval() {
+        final double exprLeft = left.eval().asDouble();
+        final double exprRight = left.eval().asDouble();
+
         return switch (operation) {
-            case '+' -> left.eval() + right.eval();
-            case '-' -> left.eval() - right.eval();
-            case '/' -> left.eval() / right.eval();
-            case '*' -> left.eval() * right.eval();
-            default -> left.eval();
+            case '-' -> new NumberValue(exprLeft - exprRight);
+            case '/' -> new NumberValue(exprLeft / exprRight);
+            case '*' -> new NumberValue(exprLeft * exprRight);
+            default -> new NumberValue(exprLeft + exprRight);
         };
     }
 

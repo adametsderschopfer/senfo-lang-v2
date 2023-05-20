@@ -103,7 +103,13 @@ public class Lexer {
             current = next();
         }
 
-        addToken(TokenType.WORD, buffer.toString());
+        String bufferString = buffer.toString();
+
+        if (bufferString.equals("print")) {
+            addToken(TokenType.PRINT, bufferString);
+        } else {
+            addToken(TokenType.WORD, bufferString);
+        }
     }
 
     private void addToken(TokenType type) {

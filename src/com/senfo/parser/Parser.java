@@ -28,6 +28,10 @@ public class Parser {
     }
 
     private IStatement statement() {
+        if (match(TokenType.PRINT)) {
+            return new PrintStatement(expression());
+        }
+
         return assignmentStatement();
     }
 

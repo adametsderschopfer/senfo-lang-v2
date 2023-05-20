@@ -5,6 +5,9 @@ public enum TokenType {
     HEX_NUMBER,
     WORD,
 
+    //keyword
+    PRINT,
+
     LEFT_PAREN, // (
     RIGHT_PAREN, // )
 

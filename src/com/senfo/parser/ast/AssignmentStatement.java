@@ -1,8 +1,9 @@
 package com.senfo.parser.ast;
 
+import com.senfo.lib.IValue;
 import com.senfo.lib.Variables;
 
-public class AssignmentStatement implements IStatement {
+public final class AssignmentStatement implements IStatement {
     private final String variable;
     private final IExpression expression;
 
@@ -13,7 +14,7 @@ public class AssignmentStatement implements IStatement {
 
     @Override
     public void execute() {
-        final double result = expression.eval();
+        final IValue result = expression.eval();
         Variables.set(variable, result);
     }
 

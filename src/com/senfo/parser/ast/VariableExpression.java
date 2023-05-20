@@ -1,5 +1,6 @@
 package com.senfo.parser.ast;
 
+import com.senfo.lib.IValue;
 import com.senfo.lib.Variables;
 
 public final class VariableExpression implements IExpression {
@@ -10,7 +11,7 @@ public final class VariableExpression implements IExpression {
     }
 
     @Override
-    public double eval() {
+    public IValue eval() {
         if (!Variables.isExists(name)) {
             throw new RuntimeException("Variable does not exists");
         }
