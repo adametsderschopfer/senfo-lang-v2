@@ -17,31 +17,49 @@ public class Parser {
         size = tokens.size();
     }
 
-    public List<IExpressionNode> parse() {
-        final List<IExpressionNode> result = new ArrayList<>();
+    public List<IStatement> parse() {
+        final List<IStatement> result = new ArrayList<>();
 
         while (!match(TokenType.EOF)) {
-            result.add(expression());
+            result.add(statement());
         }
 
         return result;
     }
 
-    private IExpressionNode expression() {
+    private IStatement statement() {
+        return assignmentStatement();
+    }
+
+    private IStatement assignmentStatement() {
+        // WORD EQ
+        final Token current = peek(0);
+
+        if (match(TokenType.WORD) && peek(0).getType() == TokenType.EQ) {
+            final String variable = current.getText();
+            required(TokenType.EQ);
+
+            return new AssignmentStatement(variable, expression());
+        }
+
+        throw new RuntimeException("Unknown statement");
+    }
+
+    private IExpression expression() {
         return additive();
     }
 
-    private IExpressionNode additive() {
-        IExpressionNode expr = multiplicative();
+    private IExpression additive() {
+        IExpression expr = multiplicative();
 
         while (true) {
             if (match(TokenType.PLUS)) {
-                expr = new BinaryExpressionNode('+', expr, multiplicative());
+                expr = new BinaryExpression('+', expr, multiplicative());
                 continue;
             }
 
             if (match(TokenType.MINUS)) {
-                expr = new BinaryExpressionNode('-', expr, multiplicative());
+                expr = new BinaryExpression('-', expr, multiplicative());
                 continue;
             }
 
@@ -51,17 +69,17 @@ public class Parser {
         return expr;
     }
 
-    private IExpressionNode multiplicative() {
-        IExpressionNode expr = unary();
+    private IExpression multiplicative() {
+        IExpression expr = unary();
 
         while (true) {
             if (match(TokenType.STAR)) {
-                expr = new BinaryExpressionNode('*', expr, unary());
+                expr = new BinaryExpression('*', expr, unary());
                 continue;
             }
 
             if (match(TokenType.SLASH)) {
-                expr = new BinaryExpressionNode('/', expr, unary());
+                expr = new BinaryExpression('/', expr, unary());
                 continue;
             }
 
@@ -71,31 +89,31 @@ public class Parser {
         return expr;
     }
 
-    private IExpressionNode unary() {
+    private IExpression unary() {
         if (match(TokenType.MINUS)) {
-            return new UnaryExpressionNode('-', primary());
+            return new UnaryExpression('-', primary());
         }
 
         return primary();
     }
 
-    private IExpressionNode primary() {
+    private IExpression primary() {
         final Token token = peek(0);
 
         if (match(TokenType.NUMBER)) {
-            return new NumberExpressionNode(Double.parseDouble(token.getText()));
+            return new NumberExpression(Double.parseDouble(token.getText()));
         }
 
         if (match(TokenType.HEX_NUMBER)) {
-            return new NumberExpressionNode(Long.parseLong(token.getText(), 16));
+            return new NumberExpression(Long.parseLong(token.getText(), 16));
         }
 
         if (match(TokenType.WORD)) {
-            return new VariableExpressionNode(token.getText());
+            return new VariableExpression(token.getText());
         }
 
         if (match(TokenType.LEFT_PAREN)) {
-            IExpressionNode result = expression();
+            IExpression result = expression();
             match(TokenType.RIGHT_PAREN);
 
             return result;
@@ -113,6 +131,17 @@ public class Parser {
 
         position++;
         return true;
+    }
+
+    private Token required(TokenType type) {
+        final Token current = peek(0);
+
+        if (type != current.getType()) {
+            throw new RuntimeException("Token " + current.toString().trim() + " doesn't match " + type);
+        }
+
+        position++;
+        return current;
     }
 
     private Token peek(int relativePosition) {

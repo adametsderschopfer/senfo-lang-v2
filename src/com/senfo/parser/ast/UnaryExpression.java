@@ -1,10 +1,10 @@
 package com.senfo.parser.ast;
 
-public final class UnaryExpressionNode implements IExpressionNode {
-    private final IExpressionNode expr;
+public final class UnaryExpression implements IExpression {
+    private final IExpression expr;
     private final char operation;
 
-    public UnaryExpressionNode(char operation, IExpressionNode expr) {
+    public UnaryExpression(char operation, IExpression expr) {
         this.expr = expr;
         this.operation = operation;
     }

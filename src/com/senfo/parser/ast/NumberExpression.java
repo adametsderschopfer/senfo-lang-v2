@@ -1,9 +1,9 @@
 package com.senfo.parser.ast;
 
-public final class NumberExpressionNode implements IExpressionNode {
+public final class NumberExpression implements IExpression {
     private final double value;
 
-    public NumberExpressionNode(double value) {
+    public NumberExpression(double value) {
         this.value = value;
     }
 

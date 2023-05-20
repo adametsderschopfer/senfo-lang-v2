@@ -12,6 +12,7 @@ public enum TokenType {
     SLASH,
     PLUS,
     MINUS,
+    EQ,
 
     EOF,
 }

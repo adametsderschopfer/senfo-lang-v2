@@ -1,10 +1,10 @@
 package com.senfo.parser.ast;
 
-public final class BinaryExpressionNode implements IExpressionNode {
-    private final IExpressionNode left, right;
+public final class BinaryExpression implements IExpression {
+    private final IExpression left, right;
     private final char operation;
 
-    public BinaryExpressionNode(char operation, IExpressionNode left, IExpressionNode right) {
+    public BinaryExpression(char operation, IExpression left, IExpression right) {
         this.operation = operation;
         this.left = left;
         this.right = right;

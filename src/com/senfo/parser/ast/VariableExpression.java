@@ -1,23 +1,21 @@
 package com.senfo.parser.ast;
 
-import com.senfo.lib.Constants;
+import com.senfo.lib.Variables;
 
-public final class VariableExpressionNode implements IExpressionNode {
+public final class VariableExpression implements IExpression {
     private final String name;
 
-    public VariableExpressionNode(String name) {
+    public VariableExpression(String name) {
         this.name = name;
     }
 
     @Override
     public double eval() {
-        // todo refactor
-
-        if (!Constants.isExists(name)) {
+        if (!Variables.isExists(name)) {
             throw new RuntimeException("Variable does not exists");
         }
 
-        return Constants.get(name);
+        return Variables.get(name);
     }
 
     @Override
