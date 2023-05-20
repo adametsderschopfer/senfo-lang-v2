@@ -12,6 +12,7 @@ public class Lexer {
             TokenType.SLASH,
             TokenType.LEFT_PAREN,
             TokenType.RIGHT_PAREN,
+            TokenType.WORD,
     };
     private final String input;
     private final int length;
@@ -30,6 +31,8 @@ public class Lexer {
 
             if (Character.isDigit(current)) {
                 tokenizeNumber();
+            } else if (Character.isLetter(current)) {
+                tokenizeWord();
             } else if (current == '#') {
                 next();
                 tokenizeHexNumber();
@@ -84,6 +87,23 @@ public class Lexer {
 
         addToken(OPERATOR_TOKENS[pos]);
         next();
+    }
+
+    private void tokenizeWord() {
+        final StringBuilder buffer = new StringBuilder();
+        char current = peek(0);
+
+        while (true) {
+            // todo to write regular expression instead of _ and $
+            if (!Character.isLetterOrDigit(current) || (current == '_') || (current == '$')) {
+                break;
+            }
+
+            buffer.append(current);
+            current = next();
+        }
+
+        addToken(TokenType.WORD, buffer.toString());
     }
 
     private void addToken(TokenType type) {

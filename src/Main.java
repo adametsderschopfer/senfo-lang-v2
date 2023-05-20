@@ -7,9 +7,9 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        final String input = "(2.86 + 2) + #2d";
+        final String input = "(PI + 2) + #2d";
         final List<Token> tokens = new Lexer(input).tokenize();
-
+        System.out.println(tokens);
         final List<IExpressionNode> expressions = new Parser(tokens).parse();
 
         for (IExpressionNode expression : expressions) {

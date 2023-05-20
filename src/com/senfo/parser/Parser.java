@@ -1,9 +1,6 @@
 package com.senfo.parser;
 
-import com.senfo.parser.ast.BinaryExpressionNode;
-import com.senfo.parser.ast.IExpressionNode;
-import com.senfo.parser.ast.NumberExpressionNode;
-import com.senfo.parser.ast.UnaryExpressionNode;
+import com.senfo.parser.ast.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,6 +88,10 @@ public class Parser {
 
         if (match(TokenType.HEX_NUMBER)) {
             return new NumberExpressionNode(Long.parseLong(token.getText(), 16));
+        }
+
+        if (match(TokenType.WORD)) {
+            return new VariableExpressionNode(token.getText());
         }
 
         if (match(TokenType.LEFT_PAREN)) {
