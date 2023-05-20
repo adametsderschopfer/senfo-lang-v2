@@ -1,15 +1,19 @@
 import com.senfo.parser.Lexer;
+import com.senfo.parser.Parser;
 import com.senfo.parser.Token;
+import com.senfo.parser.ast.IExpressionNode;
 
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        final String input = "2 + 2";
+        final String input = "(2 + 2) + #2d";
         final List<Token> tokens = new Lexer(input).tokenize();
 
-        for (Token token : tokens) {
-            System.out.println(token.getType());
+        final List<IExpressionNode> expressions = new Parser(tokens).parse();
+
+        for (IExpressionNode expression : expressions) {
+            System.out.println(expression + " = " + expression.eval());
         }
     }
 }
