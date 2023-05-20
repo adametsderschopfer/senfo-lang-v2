@@ -95,7 +95,7 @@ public class Lexer {
 
         while (true) {
             // todo to write regular expression instead of _ and $
-            if (!Character.isLetterOrDigit(current) || (current == '_') || (current == '$')) {
+            if (!Character.isLetterOrDigit(current) && (current != '_')  && (current != '$')) {
                 break;
             }
 
