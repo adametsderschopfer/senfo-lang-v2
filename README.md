@@ -5,7 +5,8 @@
 - Hex numbers - (ex.: #2def)
 - Float numbers - (ex.: 3.14)
 - Operators
-    - binary - (-, +, /, *)
+  - print - operator for expression log
+  - binary - (-, +, /, *)
 - Brackets - ()
 - Variables
 - Constants (PI, E, GOLDEN_RATION)

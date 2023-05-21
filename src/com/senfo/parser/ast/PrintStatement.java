@@ -9,7 +9,7 @@ public final class PrintStatement implements IStatement {
 
     @Override
     public void execute() {
-        System.out.println(expression.eval());
+        System.out.print(expression.eval());
     }
 
     @Override

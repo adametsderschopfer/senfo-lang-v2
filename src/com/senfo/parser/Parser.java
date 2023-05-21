@@ -105,15 +105,19 @@ public class Parser {
         final Token token = peek(0);
 
         if (match(TokenType.NUMBER)) {
-            return new NumberExpression(Double.parseDouble(token.getText()));
+            return new ValueExpression(Double.parseDouble(token.getText()));
         }
 
         if (match(TokenType.HEX_NUMBER)) {
-            return new NumberExpression(Long.parseLong(token.getText(), 16));
+            return new ValueExpression(Long.parseLong(token.getText(), 16));
         }
 
         if (match(TokenType.WORD)) {
             return new VariableExpression(token.getText());
+        }
+
+        if (match(TokenType.TEXT)) {
+            return new ValueExpression(token.getText());
         }
 
         if (match(TokenType.LEFT_PAREN)) {
@@ -137,7 +141,7 @@ public class Parser {
         return true;
     }
 
-    private Token required(TokenType type) {
+    private void required(TokenType type) {
         final Token current = peek(0);
 
         if (type != current.getType()) {
@@ -145,7 +149,6 @@ public class Parser {
         }
 
         position++;
-        return current;
     }
 
     private Token peek(int relativePosition) {

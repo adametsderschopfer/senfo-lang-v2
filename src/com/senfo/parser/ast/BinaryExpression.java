@@ -2,6 +2,7 @@ package com.senfo.parser.ast;
 
 import com.senfo.lib.IValue;
 import com.senfo.lib.NumberValue;
+import com.senfo.lib.StringValue;
 
 public final class BinaryExpression implements IExpression {
     private final IExpression left, right;
@@ -15,14 +16,28 @@ public final class BinaryExpression implements IExpression {
 
     @Override
     public IValue eval() {
-        final double exprLeft = left.eval().asDouble();
-        final double exprRight = left.eval().asDouble();
+        final IValue valueLeft = left.eval();
+        final IValue valueRight = right.eval();
+
+        if (valueLeft instanceof StringValue) {
+            final String stringLeft = valueLeft.asString();
+
+            if (operation == '*') {
+                final int iterations = (int) valueRight.asDouble();
+                return new StringValue(String.valueOf(stringLeft).repeat(Math.max(0, iterations)));
+            }
+
+            return new StringValue(stringLeft + valueRight.asString());
+        }
+
+        final double numberLeft = valueLeft.asDouble();
+        final double numberRight = valueRight.asDouble();
 
         return switch (operation) {
-            case '-' -> new NumberValue(exprLeft - exprRight);
-            case '/' -> new NumberValue(exprLeft / exprRight);
-            case '*' -> new NumberValue(exprLeft * exprRight);
-            default -> new NumberValue(exprLeft + exprRight);
+            case '-' -> new NumberValue(numberLeft - numberRight);
+            case '/' -> new NumberValue(numberLeft / numberRight);
+            case '*' -> new NumberValue(numberLeft * numberRight);
+            default -> new NumberValue(numberLeft + numberRight);
         };
     }
 

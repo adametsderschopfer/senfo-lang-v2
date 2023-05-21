@@ -33,6 +33,8 @@ public class Lexer {
                 tokenizeNumber();
             } else if (Character.isLetter(current)) {
                 tokenizeWord();
+            } else if (current == '"') {
+                tokenizeText();
             } else if (current == '#') {
                 next();
                 tokenizeHexNumber();
@@ -103,13 +105,58 @@ public class Lexer {
             current = next();
         }
 
-        String bufferString = buffer.toString();
+        final String bufferString = buffer.toString();
 
         if (bufferString.equals("print")) {
             addToken(TokenType.PRINT, bufferString);
         } else {
             addToken(TokenType.WORD, bufferString);
         }
+    }
+
+    private void tokenizeText() {
+        next(); // skip opening double quote
+        final StringBuilder buffer = new StringBuilder();
+        char current = peek(0);
+
+        while (true) {
+            if (current == '\\') {
+                current = next();
+
+                switch (current) {
+                    case '"' -> {
+                        current = next();
+                        buffer.append('"');
+                        continue;
+                    }
+
+                    case 'n' -> {
+                        current = next();
+                        buffer.append('\n');
+                        continue;
+                    }
+
+                    case 't' -> {
+                        current = next();
+                        buffer.append('\t');
+                        continue;
+                    }
+                }
+
+                buffer.append('\\');
+                continue;
+            }
+
+            if (current == '"') {
+                break;
+            }
+
+            buffer.append(current);
+            current = next();
+        }
+
+        next(); // skip closing double quote
+        addToken(TokenType.TEXT, buffer.toString());
     }
 
     private void addToken(TokenType type) {
