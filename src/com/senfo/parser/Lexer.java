@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Lexer {
-    private static final String OPERATOR_CHARS = "+-*/()";
+    private static final String OPERATOR_CHARS = "+-*/()=<>";
     private static final TokenType[] OPERATOR_TOKENS = {
             TokenType.PLUS,
             TokenType.MINUS,
@@ -12,6 +12,9 @@ public class Lexer {
             TokenType.SLASH,
             TokenType.LEFT_PAREN,
             TokenType.RIGHT_PAREN,
+            TokenType.EQ,
+            TokenType.LT,
+            TokenType.GT,
     };
     private final String input;
     private final int length;
@@ -30,6 +33,10 @@ public class Lexer {
 
             if (Character.isDigit(current)) {
                 tokenizeNumber();
+            } else if (Character.isLetter(current)) {
+                tokenizeWord();
+            } else if (current == '"') {
+                tokenizeText();
             } else if (current == '#') {
                 next();
                 tokenizeHexNumber();
@@ -84,6 +91,75 @@ public class Lexer {
 
         addToken(OPERATOR_TOKENS[pos]);
         next();
+    }
+
+    private void tokenizeWord() {
+        final StringBuilder buffer = new StringBuilder();
+        char current = peek(0);
+
+        while (true) {
+            // todo to write regular expression instead of _ and $
+            if (!Character.isLetterOrDigit(current) && (current != '_')  && (current != '$')) {
+                break;
+            }
+
+            buffer.append(current);
+            current = next();
+        }
+
+        final String bufferString = buffer.toString();
+
+        switch (bufferString) {
+            case "print" -> addToken(TokenType.PRINT, bufferString);
+            case "if" -> addToken(TokenType.IF);
+            case "else" -> addToken(TokenType.ELSE);
+            default -> addToken(TokenType.WORD, bufferString);
+        }
+    }
+
+    private void tokenizeText() {
+        next(); // skip opening double quote
+        final StringBuilder buffer = new StringBuilder();
+        char current = peek(0);
+
+        while (true) {
+            if (current == '\\') {
+                current = next();
+
+                switch (current) {
+                    case '"' -> {
+                        current = next();
+                        buffer.append('"');
+                        continue;
+                    }
+
+                    case 'n' -> {
+                        current = next();
+                        buffer.append('\n');
+                        continue;
+                    }
+
+                    case 't' -> {
+                        current = next();
+                        buffer.append('\t');
+                        continue;
+                    }
+                }
+
+                buffer.append('\\');
+                continue;
+            }
+
+            if (current == '"') {
+                break;
+            }
+
+            buffer.append(current);
+            current = next();
+        }
+
+        next(); // skip closing double quote
+        addToken(TokenType.TEXT, buffer.toString());
     }
 
     private void addToken(TokenType type) {
