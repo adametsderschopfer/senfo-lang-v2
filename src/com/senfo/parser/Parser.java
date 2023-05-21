@@ -33,6 +33,10 @@ public class Parser {
             return new PrintStatement(expression());
         }
 
+        if (match(TokenType.IF)) {
+            return ifElse();
+        }
+
         return assignmentStatement();
     }
 
@@ -48,6 +52,20 @@ public class Parser {
         }
 
         throw new RuntimeException("Unknown statement");
+    }
+
+    private IStatement ifElse() {
+        final IExpression condition = expression();
+        final IStatement ifStatement = statement();
+        final IStatement elseStatement;
+
+        if (match(TokenType.ELSE)) {
+            elseStatement = statement();
+        } else {
+            elseStatement = null;
+        }
+
+        return new IfStatement(condition, ifStatement, elseStatement);
     }
 
     private IExpression expression() {

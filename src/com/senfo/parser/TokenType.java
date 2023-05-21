@@ -8,6 +8,8 @@ public enum TokenType {
 
     //keyword
     PRINT,
+    IF,
+    ELSE,
 
     LEFT_PAREN, // (
     RIGHT_PAREN, // )

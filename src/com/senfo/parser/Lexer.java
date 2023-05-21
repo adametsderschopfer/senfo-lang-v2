@@ -109,10 +109,11 @@ public class Lexer {
 
         final String bufferString = buffer.toString();
 
-        if (bufferString.equals("print")) {
-            addToken(TokenType.PRINT, bufferString);
-        } else {
-            addToken(TokenType.WORD, bufferString);
+        switch (bufferString) {
+            case "print" -> addToken(TokenType.PRINT, bufferString);
+            case "if" -> addToken(TokenType.IF);
+            case "else" -> addToken(TokenType.ELSE);
+            default -> addToken(TokenType.WORD, bufferString);
         }
     }
 
