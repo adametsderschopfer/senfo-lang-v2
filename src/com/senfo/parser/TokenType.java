@@ -17,6 +17,8 @@ public enum TokenType {
     PLUS,
     MINUS,
     EQ,
+    LT,
+    GT,
 
     EOF,
 }

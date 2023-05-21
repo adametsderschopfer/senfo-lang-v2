@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Lexer {
-    private static final String OPERATOR_CHARS = "+-*/()=";
+    private static final String OPERATOR_CHARS = "+-*/()=<>";
     private static final TokenType[] OPERATOR_TOKENS = {
             TokenType.PLUS,
             TokenType.MINUS,
@@ -13,6 +13,8 @@ public class Lexer {
             TokenType.LEFT_PAREN,
             TokenType.RIGHT_PAREN,
             TokenType.EQ,
+            TokenType.LT,
+            TokenType.GT,
     };
     private final String input;
     private final int length;

@@ -3,6 +3,10 @@ package com.senfo.lib;
 public final class NumberValue implements IValue {
     private final double value;
 
+    public NumberValue(boolean value) {
+        this.value = value ? 1 : 0;
+    }
+
     public NumberValue(double value) {
         this.value = value;
     }

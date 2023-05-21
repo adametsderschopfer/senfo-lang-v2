@@ -4,6 +4,7 @@ import com.senfo.parser.ast.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class Parser {
     private static final Token EOF = new Token(TokenType.EOF, null);
@@ -50,7 +51,32 @@ public class Parser {
     }
 
     private IExpression expression() {
-        return additive();
+        return conditional();
+    }
+
+    private IExpression conditional() {
+        IExpression expr = additive();
+
+        while (true) {
+            if (match(TokenType.EQ)) {
+                expr = new ConditionalExpression('=', expr, additive());
+                continue;
+            }
+
+            if (match(TokenType.LT)) {
+                expr = new ConditionalExpression('<', expr, additive());
+                continue;
+            }
+
+            if (match(TokenType.GT)) {
+                expr = new ConditionalExpression('>', expr, additive());
+                continue;
+            }
+
+            break;
+        }
+
+        return expr;
     }
 
     private IExpression additive() {
