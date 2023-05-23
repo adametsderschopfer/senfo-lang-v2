@@ -69,25 +69,74 @@ public class Parser {
     }
 
     private IExpression expression() {
-        return conditional();
+        return logicalOr();
+    }
+
+    private IExpression logicalOr() {
+        IExpression result = logicalAnd();
+
+        while (true) {
+            if (match(TokenType.BARBAR)) {
+                new ConditionalExpression(ConditionalExpression.Operator.OR, result, logicalAnd());
+                continue;
+            }
+
+            break;
+        }
+
+        return result;
+    }
+
+    private IExpression logicalAnd() {
+        IExpression result = equality();
+
+        while (true) {
+            if (match(TokenType.AMPAMP)) {
+                new ConditionalExpression(ConditionalExpression.Operator.AND, result, equality());
+                continue;
+            }
+
+            break;
+        }
+
+        return result;
+    }
+
+    private IExpression equality() {
+        IExpression result = conditional();
+
+        if (match(TokenType.EQEQ)) {
+            return new ConditionalExpression(ConditionalExpression.Operator.EQUALS, result, conditional());
+        }
+
+        if (match(TokenType.EXCLEQ)) {
+            return new ConditionalExpression(ConditionalExpression.Operator.NOT_EQUALS, result, conditional());
+        }
+
+        return result;
     }
 
     private IExpression conditional() {
         IExpression expr = additive();
 
         while (true) {
-            if (match(TokenType.EQ)) {
-                expr = new ConditionalExpression('=', expr, additive());
+            if (match(TokenType.LT)) {
+                expr = new ConditionalExpression(ConditionalExpression.Operator.LT, expr, additive());
                 continue;
             }
 
-            if (match(TokenType.LT)) {
-                expr = new ConditionalExpression('<', expr, additive());
+            if (match(TokenType.LTEQ)) {
+                expr = new ConditionalExpression(ConditionalExpression.Operator.LTEQ, expr, additive());
                 continue;
             }
 
             if (match(TokenType.GT)) {
-                expr = new ConditionalExpression('>', expr, additive());
+                expr = new ConditionalExpression(ConditionalExpression.Operator.GT, expr, additive());
+                continue;
+            }
+
+            if (match(TokenType.GTEQ)) {
+                expr = new ConditionalExpression(ConditionalExpression.Operator.GTEQ, expr, additive());
                 continue;
             }
 
