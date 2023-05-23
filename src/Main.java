@@ -2,6 +2,7 @@ import com.senfo.lib.Variables;
 import com.senfo.parser.Lexer;
 import com.senfo.parser.Parser;
 import com.senfo.parser.Token;
+import com.senfo.parser.ast.BlockStatement;
 import com.senfo.parser.ast.IExpression;
 import com.senfo.parser.ast.IStatement;
 import com.senfo.parser.ast.VariableExpression;
@@ -17,13 +18,7 @@ public class Main {
         final List<Token> tokens = new Lexer(input).tokenize();
         System.out.println(tokens);
 
-        final List<IStatement> expressions = new Parser(tokens).parse();
-        for (IStatement statement : expressions) {
-            System.out.println(statement);
-        }
-
-        for (IStatement statement : expressions) {
-            statement.execute();
-        }
+        final IStatement program = new Parser(tokens).parse();
+        program.execute();
     }
 }

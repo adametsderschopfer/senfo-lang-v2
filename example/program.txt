@@ -1,3 +1,10 @@
 print 2 <= 2
-if (50 && 30) print 50
+
+if (50 && 30) {
+    print 50
+    print 501
+
+    if (1) print "true3"
+}
+
 else print 30

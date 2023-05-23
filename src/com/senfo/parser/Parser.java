@@ -18,14 +18,33 @@ public class Parser {
         size = tokens.size();
     }
 
-    public List<IStatement> parse() {
-        final List<IStatement> result = new ArrayList<>();
+    public BlockStatement parse() {
+        final BlockStatement result = new BlockStatement();
 
         while (!match(TokenType.EOF)) {
             result.add(statement());
         }
 
         return result;
+    }
+
+    private IStatement block() {
+        final BlockStatement block = new BlockStatement();
+
+        required(TokenType.LEFT_BRACE);
+        while (!match(TokenType.RIGHT_BRACE)) {
+            block.add(statement());
+        }
+
+        return block;
+    }
+
+    private IStatement statementOrBlock() {
+        if (peek(0).getType() == TokenType.LEFT_BRACE) {
+            return block();
+        }
+
+        return statement();
     }
 
     private IStatement statement() {
@@ -56,11 +75,11 @@ public class Parser {
 
     private IStatement ifElse() {
         final IExpression condition = expression();
-        final IStatement ifStatement = statement();
+        final IStatement ifStatement = statementOrBlock();
         final IStatement elseStatement;
 
         if (match(TokenType.ELSE)) {
-            elseStatement = statement();
+            elseStatement = statementOrBlock();
         } else {
             elseStatement = null;
         }
