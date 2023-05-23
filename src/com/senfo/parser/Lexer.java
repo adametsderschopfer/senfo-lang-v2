@@ -159,6 +159,8 @@ public class Lexer {
             case "print" -> addToken(TokenType.PRINT, bufferString);
             case "if" -> addToken(TokenType.IF);
             case "else" -> addToken(TokenType.ELSE);
+            case "while" -> addToken(TokenType.WHILE);
+            case "for" -> addToken(TokenType.FOR);
             default -> addToken(TokenType.WORD, bufferString);
         }
     }

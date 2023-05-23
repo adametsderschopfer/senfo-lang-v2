@@ -3,7 +3,7 @@ package com.senfo.parser.ast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BlockStatement implements IStatement {
+public final class BlockStatement implements IStatement {
     private List<IStatement> statements;
 
     public BlockStatement() {

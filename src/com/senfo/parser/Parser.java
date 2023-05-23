@@ -56,6 +56,10 @@ public class Parser {
             return ifElse();
         }
 
+        if (match(TokenType.WHILE)) {
+            return whileStatement();
+        }
+
         return assignmentStatement();
     }
 
@@ -85,6 +89,13 @@ public class Parser {
         }
 
         return new IfStatement(condition, ifStatement, elseStatement);
+    }
+
+    private IStatement whileStatement() {
+        final IExpression condition = expression();
+        final IStatement statement = statementOrBlock();
+
+        return new WhileStatement(condition, statement);
     }
 
     private IExpression expression() {
