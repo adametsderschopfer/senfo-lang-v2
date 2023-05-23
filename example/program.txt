@@ -16,5 +16,7 @@ while (i < 10) {
     i = i + 1;
 }
 
-
+for ji = 0, ji != 10, ji = ji + 1 {
+    print(ji)
+}
 

@@ -60,6 +60,10 @@ public class Parser {
             return whileStatement();
         }
 
+        if (match(TokenType.FOR)) {
+            return forStatement();
+        }
+
         return assignmentStatement();
     }
 
@@ -96,6 +100,24 @@ public class Parser {
         final IStatement statement = statementOrBlock();
 
         return new WhileStatement(condition, statement);
+    }
+
+    private IStatement forStatement() {
+        final IStatement initialization = assignmentStatement();
+        required(TokenType.COMMA);
+
+        final IExpression termination = expression();
+        required(TokenType.COMMA);
+
+        final IStatement increment = assignmentStatement();
+        final IStatement statement = statementOrBlock();
+
+        return new ForStatement(
+                initialization,
+                termination,
+                increment,
+                statement
+        );
     }
 
     private IExpression expression() {
