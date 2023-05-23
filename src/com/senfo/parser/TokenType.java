@@ -19,8 +19,18 @@ public enum TokenType {
     PLUS,
     MINUS,
     EQ,
+    EQEQ,
+    EXCL,
+    EXCLEQ,
     LT,
+    LTEQ,
     GT,
+    GTEQ,
+
+    BAR,
+    BARBAR,
+    AMP,
+    AMPAMP,
 
     EOF,
 }
