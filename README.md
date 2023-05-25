@@ -6,8 +6,14 @@
 - Float numbers - (ex.: 3.14)
 - **String**
 - Operators
-  - print - operator for expression log
-  - binary - (-, +, /, *)
+  - unary
+    - print - operator for expression log
+  - binary - (-, +, /, *, ||, &&, ==, !=, >, >=, <, <=)
 - Brackets - ()
 - Variables
 - Constants (PI, E, GOLDEN_RATION)
+- Comments
+  - One line - // comment
+  - Multiline - /* comment */
+- if, for, while, do/while
+  - continue, break

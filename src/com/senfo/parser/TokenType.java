@@ -10,17 +10,35 @@ public enum TokenType {
     PRINT,
     IF,
     ELSE,
+    WHILE,
+    FOR,
+    DO,
+    BREAK,
+    CONTINUE,
 
     LEFT_PAREN, // (
     RIGHT_PAREN, // )
+    LEFT_BRACE, // {
+    RIGHT_BRACE, // }
+    COMMA, // ,
 
     STAR,
     SLASH,
     PLUS,
     MINUS,
     EQ,
+    EQEQ,
+    EXCL,
+    EXCLEQ,
     LT,
+    LTEQ,
     GT,
+    GTEQ,
+
+    BAR,
+    BARBAR,
+    AMP,
+    AMPAMP,
 
     EOF,
 }

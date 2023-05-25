@@ -5,10 +5,37 @@ import com.senfo.lib.NumberValue;
 import com.senfo.lib.StringValue;
 
 public final class ConditionalExpression implements IExpression {
-    private final IExpression left, right;
-    private final char operation;
+    public static enum Operator {
+        PLUS("+"),
+        MINUS("-"),
+        MULTIPLY("*"),
+        DIVIDE("/"),
 
-    public ConditionalExpression(char operation, IExpression left, IExpression right) {
+        EQUALS("=="),
+        NOT_EQUALS("!="),
+        LT("<"),
+        LTEQ("<="),
+        GT(">"),
+        GTEQ(">="),
+
+        AND("&&"),
+        OR("||");
+
+        private final String name;
+
+        private Operator(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
+    private final IExpression left, right;
+    private final Operator operation;
+
+    public ConditionalExpression(Operator operation, IExpression left, IExpression right) {
         this.operation = operation;
         this.left = left;
         this.right = right;
@@ -19,29 +46,32 @@ public final class ConditionalExpression implements IExpression {
         final IValue valueLeft = left.eval();
         final IValue valueRight = right.eval();
 
+        double numberLeft, numberRight;
         if (valueLeft instanceof StringValue) {
-            final String stringLeft = valueLeft.asString();
-            final String stringRight = valueRight.asString();
-
-            return switch (operation) {
-                case '<' -> new NumberValue(stringLeft.compareTo(stringRight) < 0);
-                case '>' -> new NumberValue(stringLeft.compareTo(stringRight) > 0);
-                default -> new NumberValue(stringLeft.equals(stringRight));
-            };
+            numberLeft = valueLeft.asString().compareTo(valueRight.asString());
+            numberRight = 0;
+        } else {
+            numberLeft = valueLeft.asDouble();
+            numberRight = valueRight.asDouble();
         }
 
-        final double numberLeft = valueLeft.asDouble();
-        final double numberRight = valueRight.asDouble();
+        return new NumberValue(switch (operation) {
+            case LT -> numberLeft < numberRight;
+            case LTEQ -> numberLeft <= numberRight;
+            case GT -> numberLeft > numberRight;
+            case GTEQ -> numberLeft >= numberRight;
 
-        return switch (operation) {
-            case '<' -> new NumberValue(numberLeft < numberRight);
-            case '>' -> new NumberValue(numberLeft > numberRight);
-            default -> new NumberValue(numberLeft == numberRight);
-        };
+            case NOT_EQUALS -> numberLeft != numberRight;
+
+            case AND -> (numberLeft != 0) && (numberRight != 0);
+            case OR -> (numberLeft != 0) || (numberRight != 0);
+
+            default -> numberLeft == numberRight;
+        });
     }
 
     @Override
     public String toString() {
-        return String.format("[%s %c %s]", left, operation, right);
+        return String.format("[%s %s %s]", left, operation.getName(), right);
     }
 }

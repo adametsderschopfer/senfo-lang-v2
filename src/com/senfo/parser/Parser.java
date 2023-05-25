@@ -1,10 +1,7 @@
 package com.senfo.parser;
 
 import com.senfo.parser.ast.*;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 public class Parser {
     private static final Token EOF = new Token(TokenType.EOF, null);
@@ -18,14 +15,33 @@ public class Parser {
         size = tokens.size();
     }
 
-    public List<IStatement> parse() {
-        final List<IStatement> result = new ArrayList<>();
+    public BlockStatement parse() {
+        final BlockStatement result = new BlockStatement();
 
         while (!match(TokenType.EOF)) {
             result.add(statement());
         }
 
         return result;
+    }
+
+    private IStatement block() {
+        final BlockStatement block = new BlockStatement();
+
+        required(TokenType.LEFT_BRACE);
+        while (!match(TokenType.RIGHT_BRACE)) {
+            block.add(statement());
+        }
+
+        return block;
+    }
+
+    private IStatement statementOrBlock() {
+        if (peek(0).getType() == TokenType.LEFT_BRACE) {
+            return block();
+        }
+
+        return statement();
     }
 
     private IStatement statement() {
@@ -35,6 +51,26 @@ public class Parser {
 
         if (match(TokenType.IF)) {
             return ifElse();
+        }
+
+        if (match(TokenType.WHILE)) {
+            return whileStatement();
+        }
+
+        if (match(TokenType.DO)) {
+            return doWhileStatement();
+        }
+
+        if (match(TokenType.FOR)) {
+            return forStatement();
+        }
+
+        if (match(TokenType.BREAK)) {
+            return new BreakStatement();
+        }
+
+        if (match(TokenType.CONTINUE)) {
+            return new ContinueStatement();
         }
 
         return assignmentStatement();
@@ -56,11 +92,11 @@ public class Parser {
 
     private IStatement ifElse() {
         final IExpression condition = expression();
-        final IStatement ifStatement = statement();
+        final IStatement ifStatement = statementOrBlock();
         final IStatement elseStatement;
 
         if (match(TokenType.ELSE)) {
-            elseStatement = statement();
+            elseStatement = statementOrBlock();
         } else {
             elseStatement = null;
         }
@@ -68,26 +104,108 @@ public class Parser {
         return new IfStatement(condition, ifStatement, elseStatement);
     }
 
+    private IStatement whileStatement() {
+        final IExpression condition = expression();
+        final IStatement statement = statementOrBlock();
+
+        return new WhileStatement(condition, statement);
+    }
+
+    private IStatement doWhileStatement() {
+        final IStatement statement = statementOrBlock();
+        required(TokenType.WHILE);
+        final IExpression condition = expression();
+
+        return new DoWhileStatement(condition, statement);
+    }
+
+    private IStatement forStatement() {
+        final IStatement initialization = assignmentStatement();
+        required(TokenType.COMMA);
+
+        final IExpression termination = expression();
+        required(TokenType.COMMA);
+
+        final IStatement increment = assignmentStatement();
+        final IStatement statement = statementOrBlock();
+
+        return new ForStatement(
+                initialization,
+                termination,
+                increment,
+                statement
+        );
+    }
+
     private IExpression expression() {
-        return conditional();
+        return logicalOr();
+    }
+
+    private IExpression logicalOr() {
+        IExpression result = logicalAnd();
+
+        while (true) {
+            if (match(TokenType.BARBAR)) {
+                new ConditionalExpression(ConditionalExpression.Operator.OR, result, logicalAnd());
+                continue;
+            }
+
+            break;
+        }
+
+        return result;
+    }
+
+    private IExpression logicalAnd() {
+        IExpression result = equality();
+
+        while (true) {
+            if (match(TokenType.AMPAMP)) {
+                new ConditionalExpression(ConditionalExpression.Operator.AND, result, equality());
+                continue;
+            }
+
+            break;
+        }
+
+        return result;
+    }
+
+    private IExpression equality() {
+        IExpression result = conditional();
+
+        if (match(TokenType.EQEQ)) {
+            return new ConditionalExpression(ConditionalExpression.Operator.EQUALS, result, conditional());
+        }
+
+        if (match(TokenType.EXCLEQ)) {
+            return new ConditionalExpression(ConditionalExpression.Operator.NOT_EQUALS, result, conditional());
+        }
+
+        return result;
     }
 
     private IExpression conditional() {
         IExpression expr = additive();
 
         while (true) {
-            if (match(TokenType.EQ)) {
-                expr = new ConditionalExpression('=', expr, additive());
+            if (match(TokenType.LT)) {
+                expr = new ConditionalExpression(ConditionalExpression.Operator.LT, expr, additive());
                 continue;
             }
 
-            if (match(TokenType.LT)) {
-                expr = new ConditionalExpression('<', expr, additive());
+            if (match(TokenType.LTEQ)) {
+                expr = new ConditionalExpression(ConditionalExpression.Operator.LTEQ, expr, additive());
                 continue;
             }
 
             if (match(TokenType.GT)) {
-                expr = new ConditionalExpression('>', expr, additive());
+                expr = new ConditionalExpression(ConditionalExpression.Operator.GT, expr, additive());
+                continue;
+            }
+
+            if (match(TokenType.GTEQ)) {
+                expr = new ConditionalExpression(ConditionalExpression.Operator.GTEQ, expr, additive());
                 continue;
             }
 
