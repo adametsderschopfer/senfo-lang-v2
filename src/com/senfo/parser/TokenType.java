@@ -15,6 +15,8 @@ public enum TokenType {
     DO,
     BREAK,
     CONTINUE,
+    DEF,
+    RETURN,
 
     LEFT_PAREN, // (
     RIGHT_PAREN, // )

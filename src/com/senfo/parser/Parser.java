@@ -1,6 +1,8 @@
 package com.senfo.parser;
 
 import com.senfo.parser.ast.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class Parser {
@@ -73,6 +75,18 @@ public class Parser {
             return new ContinueStatement();
         }
 
+        if (match(TokenType.RETURN)) {
+            return new ReturnStatement(expression());
+        }
+
+        if (match(TokenType.DEF)) {
+            return functionDefine();
+        }
+
+        if (peek(0).getType() == TokenType.WORD && peek(1).getType() == TokenType.LEFT_PAREN) {
+            return new FunctionStatement(function());
+        }
+
         return assignmentStatement();
     }
 
@@ -102,6 +116,36 @@ public class Parser {
         }
 
         return new IfStatement(condition, ifStatement, elseStatement);
+    }
+
+    private FunctionDefineStatement functionDefine() {
+        final String name = required(TokenType.WORD).getText();
+        required(TokenType.LEFT_PAREN);
+
+        final List<String> argNames = new ArrayList<>();
+
+        while (!match(TokenType.RIGHT_PAREN)) {
+            argNames.add(required(TokenType.WORD).getText());
+            match(TokenType.COMMA);
+        }
+
+        final IStatement body = statementOrBlock();
+
+        return new FunctionDefineStatement(name, argNames, body);
+    }
+
+    private FunctionalExpression function() {
+        final String name = required(TokenType.WORD).getText();
+        required(TokenType.LEFT_PAREN);
+
+        final FunctionalExpression function = new FunctionalExpression(name);
+
+        while (!match(TokenType.RIGHT_PAREN)) {
+            function.addArgument(expression());
+            match(TokenType.COMMA);
+        }
+
+        return function;
     }
 
     private IStatement whileStatement() {
@@ -274,6 +318,10 @@ public class Parser {
             return new ValueExpression(Long.parseLong(token.getText(), 16));
         }
 
+        if (peek(0).getType() == TokenType.WORD && peek(1).getType() == TokenType.LEFT_PAREN) {
+            return function();
+        }
+
         if (match(TokenType.WORD)) {
             return new VariableExpression(token.getText());
         }
@@ -303,7 +351,7 @@ public class Parser {
         return true;
     }
 
-    private void required(TokenType type) {
+    private Token required(TokenType type) {
         final Token current = peek(0);
 
         if (type != current.getType()) {
@@ -311,6 +359,8 @@ public class Parser {
         }
 
         position++;
+
+        return current;
     }
 
     private Token peek(int relativePosition) {

@@ -1,11 +1,7 @@
-import com.senfo.lib.Variables;
 import com.senfo.parser.Lexer;
 import com.senfo.parser.Parser;
 import com.senfo.parser.Token;
-import com.senfo.parser.ast.BlockStatement;
-import com.senfo.parser.ast.IExpression;
 import com.senfo.parser.ast.IStatement;
-import com.senfo.parser.ast.VariableExpression;
 
 import java.io.IOException;
 import java.nio.file.Files;

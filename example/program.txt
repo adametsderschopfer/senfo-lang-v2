@@ -40,5 +40,14 @@ do {
     print(i);
 } while (i < 10)
 
-//test more
+//test function expression
+print sin(PI/2)
 
+// test function
+
+def test_func (a, b) {
+    return a + b;
+}
+
+print "test func ->"
+print test_func(10, 2);
