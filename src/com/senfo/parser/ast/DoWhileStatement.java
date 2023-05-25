@@ -1,17 +1,17 @@
 package com.senfo.parser.ast;
 
-public final class WhileStatement implements IStatement {
+public final class DoWhileStatement implements IStatement {
     private final IExpression condition;
     private final IStatement statement;
 
-    public WhileStatement(IExpression condition, IStatement statement) {
+    public DoWhileStatement(IExpression condition, IStatement statement) {
         this.condition = condition;
         this.statement = statement;
     }
 
     @Override
     public void execute() {
-        while (condition.eval().asDouble() != 0) {
+        do {
             try {
                 statement.execute();
             } catch (BreakStatement bs) {
@@ -19,11 +19,11 @@ public final class WhileStatement implements IStatement {
             } catch (ContinueStatement cs) {
                 // continue;
             }
-        }
+        } while (condition.eval().asDouble() != 0);
     }
 
     @Override
     public String toString() {
-        return "while " + condition + " {" + statement + "}";
+        return "do " + " {" + statement + "}" + " while " + condition;
     }
 }

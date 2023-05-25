@@ -1,10 +1,7 @@
 package com.senfo.parser;
 
 import com.senfo.parser.ast.*;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 public class Parser {
     private static final Token EOF = new Token(TokenType.EOF, null);
@@ -60,8 +57,20 @@ public class Parser {
             return whileStatement();
         }
 
+        if (match(TokenType.DO)) {
+            return doWhileStatement();
+        }
+
         if (match(TokenType.FOR)) {
             return forStatement();
+        }
+
+        if (match(TokenType.BREAK)) {
+            return new BreakStatement();
+        }
+
+        if (match(TokenType.CONTINUE)) {
+            return new ContinueStatement();
         }
 
         return assignmentStatement();
@@ -100,6 +109,14 @@ public class Parser {
         final IStatement statement = statementOrBlock();
 
         return new WhileStatement(condition, statement);
+    }
+
+    private IStatement doWhileStatement() {
+        final IStatement statement = statementOrBlock();
+        required(TokenType.WHILE);
+        final IExpression condition = expression();
+
+        return new DoWhileStatement(condition, statement);
     }
 
     private IStatement forStatement() {

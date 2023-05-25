@@ -12,6 +12,9 @@ public enum TokenType {
     ELSE,
     WHILE,
     FOR,
+    DO,
+    BREAK,
+    CONTINUE,
 
     LEFT_PAREN, // (
     RIGHT_PAREN, // )

@@ -16,7 +16,29 @@ while (i < 10) {
     i = i + 1;
 }
 
+// test for
 for ji = 0, ji != 10, ji = ji + 1 {
+
+    if (ji == 1) {
+        // test continue
+        continue
+    }
+
     print(ji)
+
+    if (ji == 3) {
+            // test continue
+            break
+        }
 }
+    print("test do while - ");
+// test do while
+i = 0;
+
+do {
+    i = i + 1;
+    print(i);
+} while (i < 10)
+
+//test more
 
