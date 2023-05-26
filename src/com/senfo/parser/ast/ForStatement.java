@@ -15,7 +15,7 @@ public final class ForStatement implements IStatement {
 
     @Override
     public void execute() {
-        for(initialization.execute(); termination.eval().asDouble() != 0; increment.execute()) {
+        for(initialization.execute(); termination.eval().asNumber() != 0; increment.execute()) {
             try {
                 statement.execute();
             } catch (BreakStatement bs) {

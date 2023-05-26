@@ -10,7 +10,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        final String input = new String(Files.readAllBytes(Paths.get("example/program.txt")), "UTF-8");
+        final String input = new String(Files.readAllBytes(Paths.get("example/program.sf")), "UTF-8");
         final List<Token> tokens = new Lexer(input).tokenize();
         System.out.println(tokens);
 

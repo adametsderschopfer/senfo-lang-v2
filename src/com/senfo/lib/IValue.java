@@ -1,6 +1,6 @@
 package com.senfo.lib;
 
 public interface IValue {
-    double asDouble();
+    double asNumber();
     String asString();
 }

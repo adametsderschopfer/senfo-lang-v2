@@ -10,7 +10,7 @@ public class StringValue implements IValue {
     }
 
     @Override
-    public double asDouble() {
+    public double asNumber() {
         try {
             return Double.parseDouble(value);
         } catch (NumberFormatException error) {

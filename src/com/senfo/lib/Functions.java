@@ -2,7 +2,6 @@ package com.senfo.lib;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 public class Functions {
     private static final Map<String, IFunction> functions;
@@ -15,7 +14,7 @@ public class Functions {
                 throw new RuntimeException("One args expected");
             }
 
-            return new NumberValue(Math.sin(args[0].asDouble()));
+            return new NumberValue(Math.sin(args[0].asNumber()));
         });
 
         functions.put("cos", args -> {
@@ -23,8 +22,10 @@ public class Functions {
                 throw new RuntimeException("One args expected");
             }
 
-            return new NumberValue(Math.cos(args[0].asDouble()));
+            return new NumberValue(Math.cos(args[0].asNumber()));
         });
+
+        functions.put("createCollection", ArrayValue::new);
     }
 
     public static boolean isExists(String key) {

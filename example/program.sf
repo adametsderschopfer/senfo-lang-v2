@@ -51,3 +51,14 @@ def test_func (a, b) {
 
 print "test func ->"
 print test_func(10, 2);
+
+arr = createCollection(1, "text", 2);
+print arr;
+
+arr[0] = 1000;
+
+print arr[1 - 1];
+
+test_array = [1,2,3, [1]]
+
+print test_array

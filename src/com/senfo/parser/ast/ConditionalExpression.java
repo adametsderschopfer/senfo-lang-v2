@@ -51,8 +51,8 @@ public final class ConditionalExpression implements IExpression {
             numberLeft = valueLeft.asString().compareTo(valueRight.asString());
             numberRight = 0;
         } else {
-            numberLeft = valueLeft.asDouble();
-            numberRight = valueRight.asDouble();
+            numberLeft = valueLeft.asNumber();
+            numberRight = valueRight.asNumber();
         }
 
         return new NumberValue(switch (operation) {

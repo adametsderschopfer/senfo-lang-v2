@@ -19,7 +19,7 @@ public final class DoWhileStatement implements IStatement {
             } catch (ContinueStatement cs) {
                 // continue;
             }
-        } while (condition.eval().asDouble() != 0);
+        } while (condition.eval().asNumber() != 0);
     }
 
     @Override

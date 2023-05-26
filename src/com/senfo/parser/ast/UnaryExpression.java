@@ -15,7 +15,7 @@ public final class UnaryExpression implements IExpression {
     @Override
     public IValue eval() {
         return switch (operation) {
-            case '-' -> new NumberValue(-expr.eval().asDouble());
+            case '-' -> new NumberValue(-expr.eval().asNumber());
             default -> expr.eval();
         };
     }

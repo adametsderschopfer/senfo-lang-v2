@@ -1,5 +1,6 @@
 package com.senfo.parser.ast;
 
+import com.senfo.lib.ArrayValue;
 import com.senfo.lib.IValue;
 import com.senfo.lib.NumberValue;
 import com.senfo.lib.StringValue;
@@ -19,19 +20,19 @@ public final class BinaryExpression implements IExpression {
         final IValue valueLeft = left.eval();
         final IValue valueRight = right.eval();
 
-        if (valueLeft instanceof StringValue) {
+        if ((valueLeft instanceof StringValue) || (valueLeft instanceof ArrayValue)) {
             final String stringLeft = valueLeft.asString();
 
             if (operation == '*') {
-                final int iterations = (int) valueRight.asDouble();
+                final int iterations = (int) valueRight.asNumber();
                 return new StringValue(String.valueOf(stringLeft).repeat(Math.max(0, iterations)));
             }
 
             return new StringValue(stringLeft + valueRight.asString());
         }
 
-        final double numberLeft = valueLeft.asDouble();
-        final double numberRight = valueRight.asDouble();
+        final double numberLeft = valueLeft.asNumber();
+        final double numberRight = valueRight.asNumber();
 
         return switch (operation) {
             case '-' -> new NumberValue(numberLeft - numberRight);

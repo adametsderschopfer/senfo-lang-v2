@@ -12,7 +12,7 @@ public final class NumberValue implements IValue {
     }
 
     @Override
-    public double asDouble() {
+    public double asNumber() {
         return value;
     }
 
