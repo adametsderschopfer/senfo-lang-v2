@@ -94,21 +94,14 @@ public class Parser {
         if (lookMatch(0, TokenType.WORD) && lookMatch(1, TokenType.EQ)) {
             final String variable = required(TokenType.WORD).getText();
             required(TokenType.EQ);
-
             return new AssignmentStatement(variable, expression());
         }
 
         if (lookMatch(0, TokenType.WORD) && lookMatch(1, TokenType.LEFT_BRACKET)) {
-            final String variable = required(TokenType.WORD).getText();
-            required(TokenType.LEFT_BRACKET);
-
-            final IExpression index =  expression();
-            required(TokenType.RIGHT_BRACKET);
+            final ArrayAccessExpression array = element();
             required(TokenType.EQ);
-
-            return new ArrayAssignmentStatement(variable, index, expression());
+            return new ArrayAssignmentStatement(array, expression());
         }
-
         throw new RuntimeException("Unknown statement");
     }
 
@@ -368,15 +361,19 @@ public class Parser {
         return new ArrayExpression(elements);
     }
 
-    private IExpression element() {
+    private ArrayAccessExpression element() {
         final String variable = required(TokenType.WORD).getText();
-        required(TokenType.LEFT_BRACKET);
+        final List<IExpression> indices = new ArrayList<>();
 
-        final IExpression index =  expression();
-        required(TokenType.RIGHT_BRACKET);
+        do {
+            required(TokenType.LEFT_BRACKET);
+            indices.add(expression());
+            required(TokenType.RIGHT_BRACKET);
+        } while(lookMatch(0, TokenType.LEFT_BRACKET));
 
-        return new ArrayAccessExpression(variable, index);
+        return new ArrayAccessExpression(variable, indices);
     }
+
 
     private boolean match(TokenType type) {
         final Token current = peek(0);
